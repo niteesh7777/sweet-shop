@@ -1,0 +1,23 @@
+{
+  "name": "sweet-shop-v2",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Niteesh Naik",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,md,css,scss,yml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  }
+}
