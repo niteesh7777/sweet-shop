@@ -67,4 +67,25 @@ describe('Auth – Register', () => {
 
     expect(second.status).toBe(409);
   });
+  it('should return 400 for missing email', async () => {
+    const res = await request(app).post('/api/auth/register').send({ password: 'password123' });
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 for invalid email format', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'not-an-email', password: 'password123' });
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should return 400 for short password', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ email: 'short@test.com', password: '123' });
+
+    expect(res.status).toBe(400);
+  });
 });
