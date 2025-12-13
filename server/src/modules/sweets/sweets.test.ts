@@ -93,4 +93,52 @@ describe('Sweets', () => {
     expect(res.body.length).toBe(1);
     expect(res.body[0].name).toBe('Cake');
   });
+
+  it('should allow purchasing a sweet and decrease quantity', async () => {
+    const sweet = await prisma.sweet.create({
+      data: { name: 'Barfi', category: 'Indian', price: 12, quantity: 10 },
+    });
+
+    const res = await request(app).post(`/api/sweets/${sweet.id}/purchase`).send({ quantity: 3 });
+
+    expect(res.status).toBe(200);
+
+    const updated = await prisma.sweet.findUnique({ where: { id: sweet.id } });
+    expect(updated!.quantity).toBe(7);
+  });
+
+  it('should fail purchase when quantity is insufficient', async () => {
+    const sweet = await prisma.sweet.create({
+      data: { name: 'Halwa', category: 'Indian', price: 9, quantity: 2 },
+    });
+
+    const res = await request(app).post(`/api/sweets/${sweet.id}/purchase`).send({ quantity: 5 });
+
+    expect(res.status).toBe(400);
+  });
+
+  it('should allow admin to restock a sweet', async () => {
+    // register admin
+    const registerRes = await request(app).post('/api/auth/register').send({
+      email: 'admin@inventory.com',
+      password: 'password123',
+      role: 'ADMIN',
+    });
+
+    const token = registerRes.body.token;
+
+    const sweet = await prisma.sweet.create({
+      data: { name: 'Peda', category: 'Indian', price: 6, quantity: 5 },
+    });
+
+    const res = await request(app)
+      .post(`/api/sweets/${sweet.id}/restock`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ quantity: 10 });
+
+    expect(res.status).toBe(200);
+
+    const updated = await prisma.sweet.findUnique({ where: { id: sweet.id } });
+    expect(updated!.quantity).toBe(15);
+  });
 });
