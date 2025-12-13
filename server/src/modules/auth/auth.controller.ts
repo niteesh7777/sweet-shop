@@ -1,12 +1,25 @@
+import 'dotenv/config';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { registerUser } from './auth.service.js';
 
 export async function register(req: Request, res: Response) {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  await registerUser(email, password);
+    const user = await registerUser(email, password);
 
-  return res.status(201).json({
-    token: 'fake-jwt-token',
-  });
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+
+    return res.status(201).json({ token });
+  } catch (error) {
+    console.error('Registration error:', error);
+    return res.status(400).json({ error: 'Registration failed' });
+  }
 }

@@ -1,12 +1,19 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app.js';
 import { prisma } from '../../prisma.js';
 
 describe('Auth – Register', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
   it('should register a user and return a JWT token', async () => {
     const response = await request(app).post('/api/auth/register').send({
-      email: 'user2@test.com',
+      email: 'user4@test.com',
       password: 'password123',
     });
 
