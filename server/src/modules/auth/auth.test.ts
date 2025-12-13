@@ -52,4 +52,19 @@ describe('Auth – Register', () => {
     expect(user).not.toBeNull();
     expect(user!.password).not.toBe(plainPassword);
   });
+
+  it('should fail with 409 when registering duplicate email', async () => {
+    const payload = {
+      email: 'dup@test.com',
+      password: 'password123',
+    };
+
+    const first = await request(app).post('/api/auth/register').send(payload);
+
+    expect(first.status).toBe(201);
+
+    const second = await request(app).post('/api/auth/register').send(payload);
+
+    expect(second.status).toBe(409);
+  });
 });
