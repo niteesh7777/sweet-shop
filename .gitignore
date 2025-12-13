@@ -2,6 +2,8 @@
 # Dependencies
 # =========================
 node_modules/
+generated/prisma/
+generated/prisma/**
 
 # Package manager lockfiles
 # Keep ONLY the one you use

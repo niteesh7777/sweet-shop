@@ -6,7 +6,7 @@ import { prisma } from '../../prisma.js';
 describe('Auth – Register', () => {
   it('should register a user and return a JWT token', async () => {
     const response = await request(app).post('/api/auth/register').send({
-      email: 'user1@test.com',
+      email: 'user2@test.com',
       password: 'password123',
     });
 
