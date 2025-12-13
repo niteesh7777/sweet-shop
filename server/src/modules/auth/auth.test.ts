@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app.js';
 import { prisma } from '../../prisma.js';
+import jwt from 'jsonwebtoken';
 
 describe('Auth – Register', () => {
   beforeEach(async () => {
@@ -87,5 +88,37 @@ describe('Auth – Register', () => {
       .send({ email: 'short@test.com', password: '123' });
 
     expect(res.status).toBe(400);
+  });
+
+  it('should register a user and return a valid JWT token', async () => {
+    const response = await request(app).post('/api/auth/register').send({
+      email: 'jwt@test.com',
+      password: 'password123',
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('token');
+
+    const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET!) as { sub: string };
+
+    expect(decoded.sub).toBeDefined();
+  });
+
+  it('should allow access to protected route with valid token', async () => {
+    const registerRes = await request(app).post('/api/auth/register').send({
+      email: 'protected@test.com',
+      password: 'password123',
+    });
+
+    const token = registerRes.body.token;
+
+    const res = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+  });
+
+  it('should reject access to protected route without token', async () => {
+    const res = await request(app).get('/api/auth/me');
+    expect(res.status).toBe(401);
   });
 });
