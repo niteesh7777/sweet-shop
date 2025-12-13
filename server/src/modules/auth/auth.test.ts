@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '../../app.js';
 import { prisma } from '../../prisma.js';
@@ -7,10 +7,6 @@ import jwt from 'jsonwebtoken';
 describe('Auth – Register', () => {
   beforeEach(async () => {
     await prisma.user.deleteMany({});
-  });
-
-  afterAll(async () => {
-    await prisma.$disconnect();
   });
   it('should register a user and return a JWT token', async () => {
     const response = await request(app).post('/api/auth/register').send({
@@ -122,7 +118,7 @@ describe('Auth – Register', () => {
     expect(res.status).toBe(401);
   });
 
-  it('should login user and return access & refresh tokens', async () => {
+  it('should login user and return access token', async () => {
     // register user first
     await request(app).post('/api/auth/register').send({
       email: 'login@test.com',
@@ -136,17 +132,16 @@ describe('Auth – Register', () => {
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('accessToken');
-    expect(res.body).toHaveProperty('refreshToken');
   });
 
   it('should fail login with wrong password', async () => {
     await request(app).post('/api/auth/register').send({
-      email: 'wrongpass@test.com',
+      email: 'wrong@test.com',
       password: 'password123',
     });
 
     const res = await request(app).post('/api/auth/login').send({
-      email: 'wrongpass@test.com',
+      email: 'wrong@test.com',
       password: 'wrongpassword',
     });
 

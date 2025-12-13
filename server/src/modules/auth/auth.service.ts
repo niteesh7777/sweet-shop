@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../../prisma.js';
 import { EmailAlreadyExistsError } from '../../common/errors/EmailAlreadyExistsError.js';
+import { signAccessToken } from '../../common/jwt/jwt.service.js';
 
 export async function registerUser(
   email: string,
@@ -24,4 +25,20 @@ export async function registerUser(
       role,
     },
   });
+}
+
+export async function loginUser(email: string, password: string) {
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user) {
+    throw new Error('Invalid credentials');
+  }
+
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) {
+    throw new Error('Invalid credentials');
+  }
+
+  const accessToken = signAccessToken(user.id);
+  return { accessToken };
 }

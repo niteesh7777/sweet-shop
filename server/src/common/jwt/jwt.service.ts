@@ -15,6 +15,13 @@ export function signToken(userId: string) {
   });
 }
 
+export function signAccessToken(userId: string) {
+  return jwt.sign({}, JWT_SECRET, {
+    subject: userId,
+    expiresIn: JWT_EXPIRES_IN,
+  });
+}
+
 export function verifyToken(token: string) {
   if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not configured');

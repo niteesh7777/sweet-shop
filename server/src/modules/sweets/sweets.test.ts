@@ -11,7 +11,7 @@ describe('Sweets', () => {
 
   it('should allow admin to create a sweet', async () => {
     const registerRes = await request(app).post('/api/auth/register').send({
-      email: 'admin2@sweets.com',
+      email: 'admin3@sweets.com',
       password: 'password123',
       role: 'ADMIN',
     });
