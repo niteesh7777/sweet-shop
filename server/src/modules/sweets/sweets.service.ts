@@ -38,3 +38,23 @@ export function searchSweets(params: {
     },
   });
 }
+
+export async function purchaseSweet(id: string, qty: number) {
+  const sweet = await prisma.sweet.findUnique({ where: { id } });
+
+  if (!sweet || sweet.quantity < qty) {
+    throw new Error('Insufficient quantity');
+  }
+
+  return prisma.sweet.update({
+    where: { id },
+    data: { quantity: sweet.quantity - qty },
+  });
+}
+
+export async function restockSweet(id: string, qty: number) {
+  return prisma.sweet.update({
+    where: { id },
+    data: { quantity: { increment: qty } },
+  });
+}
