@@ -28,4 +28,21 @@ describe('Auth – Register', () => {
 
     expect(user).not.toBeNull();
   });
+
+  it('should store a hashed password, not plaintext', async () => {
+    const email = 'hash@test.com';
+    const plainPassword = 'password123';
+
+    await request(app).post('/api/auth/register').send({
+      email,
+      password: plainPassword,
+    });
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    expect(user).not.toBeNull();
+    expect(user!.password).not.toBe(plainPassword);
+  });
 });
