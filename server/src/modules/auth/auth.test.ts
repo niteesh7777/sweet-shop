@@ -121,4 +121,44 @@ describe('Auth – Register', () => {
     const res = await request(app).get('/api/auth/me');
     expect(res.status).toBe(401);
   });
+
+  it('should login user and return access & refresh tokens', async () => {
+    // register user first
+    await request(app).post('/api/auth/register').send({
+      email: 'login@test.com',
+      password: 'password123',
+    });
+
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'login@test.com',
+      password: 'password123',
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('accessToken');
+    expect(res.body).toHaveProperty('refreshToken');
+  });
+
+  it('should fail login with wrong password', async () => {
+    await request(app).post('/api/auth/register').send({
+      email: 'wrongpass@test.com',
+      password: 'password123',
+    });
+
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'wrongpass@test.com',
+      password: 'wrongpassword',
+    });
+
+    expect(res.status).toBe(401);
+  });
+
+  it('should fail login for non-existing user', async () => {
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'nouser@test.com',
+      password: 'password123',
+    });
+
+    expect(res.status).toBe(401);
+  });
 });
