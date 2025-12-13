@@ -1,0 +1,112 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# Package manager lockfiles
+# Keep ONLY the one you use
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+# (Do NOT ignore package-lock.json if using npm)
+
+# =========================
+# Build outputs
+# =========================
+dist/
+build/
+.out/
+.cache/
+
+# Frontend frameworks
+.next/
+.nuxt/
+.output/
+.gatsby/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs & runtime data
+# =========================
+*.log
+logs/
+pids/
+*.pid
+*.seed
+
+# =========================
+# Coverage & test caches
+# =========================
+coverage/
+.nyc_output/
+jest-cache/
+.vitest/
+
+# =========================
+# Prisma
+# =========================
+node_modules/.prisma/
+*.db
+*.sqlite
+*.sqlite3
+
+# NOTE:
+# DO NOT ignore:
+# - prisma/schema.prisma
+# - prisma/migrations/
+
+# =========================
+# IDE & OS files
+# =========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Caches
+# =========================
+.npm/
+.eslintcache
+.stylelintcache
+.prettiercache
+.parcel-cache/
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+*~
+*.swp
+*.swo
+
+# =========================
+# Security / certificates
+# =========================
+*.pem
+*.crt
+*.key
+ssl/
+localhost-*.pem
+
+# =========================
+# Uploads (if applicable)
+# =========================
+uploads/
+public/uploads/
