@@ -6,13 +6,14 @@ import { prisma } from '../../prisma.js';
 describe('Sweets', () => {
   beforeEach(async () => {
     await prisma.sweet.deleteMany({});
+    await prisma.user.deleteMany({});
   });
 
   it('should allow admin to create a sweet', async () => {
-    // first register an admin
     const registerRes = await request(app).post('/api/auth/register').send({
-      email: 'admin@sweets.com',
+      email: 'admin2@sweets.com',
       password: 'password123',
+      role: 'ADMIN',
     });
 
     const token = registerRes.body.token;

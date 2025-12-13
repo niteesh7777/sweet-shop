@@ -5,9 +5,9 @@ import { signToken } from '../../common/jwt/jwt.service.js';
 
 export async function register(req: Request, res: Response) {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    const user = await registerUser(email, password);
+    const user = await registerUser(email, password, role);
     const token = signToken(user.id);
 
     return res.status(201).json({ token });
