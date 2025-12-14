@@ -115,7 +115,7 @@ The project strictly follows **TDD principles**:
 - Vitest
 - Supertest
 - Prisma Migrate
-- Git (frequent, narrative commits)
+- Git 
 
 ---
 
